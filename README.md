@@ -1,5 +1,5 @@
 # Lars
-> 刘丹冰老师[Lars](https://github.com/aceld/Lars) 负载均衡远程服务调度系统的逐章节复现
+> 刘丹冰老师[Lars](https://github.com/aceld/Lars) 负载均衡远程服务调度系统的逐章节实现
 > 
 > 多线程部分内容改用C++11标准库实现
 > 
