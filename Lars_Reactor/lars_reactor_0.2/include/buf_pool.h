@@ -6,8 +6,8 @@
 #include <mutex>
 
 
-typedef __gnu_cxx::hash_map<int, io_buf*> pool_t;
-// typedef std::unordered_map<int, io_buf*> pool_t;
+// typedef __gnu_cxx::hash_map<int, io_buf*> pool_t;
+typedef std::unordered_map<int, io_buf*> pool_t;
 
 enum MEM_CAP {
     m4K     = 4096,
