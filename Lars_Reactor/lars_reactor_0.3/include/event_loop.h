@@ -6,18 +6,18 @@
  *
  * */
 #include <sys/epoll.h>
-#include <ext/hash_map>
-#include <ext/hash_set>
+#include <unordered_map>
+#include <unordered_set>
 #include "event_base.h"
 
 #define MAXEVENTS 10
 
 // map: fd->io_event 
-typedef __gnu_cxx::hash_map<int, io_event> io_event_map;
+typedef std::unordered_map<int, io_event> io_event_map;
 //定义指向上面map类型的迭代器
-typedef __gnu_cxx::hash_map<int, io_event>::iterator io_event_map_it;
+typedef std::unordered_map<int, io_event>::iterator io_event_map_it;
 //全部正在监听的fd集合
-typedef __gnu_cxx::hash_set<int> listen_fd_set;
+typedef std::unordered_set<int> listen_fd_set;
 
 class event_loop{
 public:
@@ -28,7 +28,7 @@ public:
     void event_process();
 
     //添加一个io事件到loop中
-    void add_io_event(int fd, io_callback *proc, int mask, void *args=NULL);
+    void add_io_event(int fd, io_callback *proc, int mask, void *args=nullptr);
 
     //删除一个io事件从loop中
     void del_io_event(int fd);
