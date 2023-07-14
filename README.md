@@ -1,3 +1,9 @@
 # Lars
+> 刘丹冰老师[Lars](https://github.com/aceld/Lars) 负载均衡远程服务调度系统的逐章节复现，供学习使用
+> 如有问题，请联系
 
-## 刘丹冰老师Lars 基于Reactor模式的Linux C++服务器框架模型v0.1-v0.12 逐步实现
+## Lars Reactor v0.1-v0.12: 基于Reactor模式的LinuxC++服务器
+
+### Lars Reactor v0.1
+- 代码：[Lars_reactor_0.1](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.1)
+![Lars Reactor v0.1](img/image.png)
