@@ -3,6 +3,7 @@
 #include <ext/hash_map>
 // #include <unordered_map>
 #include "io_buf.h"
+#include <mutex>
 
 
 typedef __gnu_cxx::hash_map<int, io_buf*> pool_t;
@@ -37,7 +38,7 @@ public:
     //获取单例方法
     static buf_pool *instance() {
         //保证init方法在这个进程执行中 只被执行一次
-        pthread_once(&_once, init);
+        std::call_once(_once, init);
         return _instance;
     }
 
@@ -67,8 +68,8 @@ private:
     static buf_pool *_instance;
 
     //用于保证创建单例的init方法只执行一次的锁
-    static pthread_once_t _once;
+    static std::once_flag _once;
 
     //用户保护内存池链表修改的互斥锁
-    static pthread_mutex_t _mutex;
+    static std::mutex _mutex;
 };

@@ -1,14 +1,15 @@
 #include "buf_pool.h"
 #include "assert.h"
 
+
 //单例对象
-buf_pool * buf_pool::_instance = NULL;
+buf_pool* buf_pool::_instance = NULL;
 
 //用于保证创建单例的init方法只执行一次的锁
-pthread_once_t buf_pool::_once = PTHREAD_ONCE_INIT;
+std::once_flag buf_pool::_once;
 
 //用户保护内存池链表修改的互斥锁
-pthread_mutex_t buf_pool::_mutex = PTHREAD_MUTEX_INITIALIZER;
+std::mutex buf_pool::_mutex;
 
 
 //构造函数 主要是预先开辟一定量的空间
@@ -194,7 +195,7 @@ io_buf *buf_pool::alloc_buf(int N){
     }
 
     //2 如果该组已经没有，需要额外申请，那么需要加锁保护
-    pthread_mutex_lock(&_mutex);
+    _mutex.lock();
     if(!_pool[index]){
         if(_total_mem + index / 1024 >= EXTRA_MEM_LIMIT){
             // 当前开辟的空间已经超过最大限制
@@ -207,15 +208,14 @@ io_buf *buf_pool::alloc_buf(int N){
             exit(1);
         }
         _total_mem += index/1024;
-        pthread_mutex_unlock(&_mutex);
+        _mutex.unlock();
         return new_buf;
     }
 
    //3 从pool中摘除该内存块
     io_buf *target = _pool[index];
     _pool[index] = target->next;
-    pthread_mutex_unlock(&_mutex);
-    
+    _mutex.unlock(); 
     target->next = NULL;
     
     return target;
@@ -230,7 +230,7 @@ void buf_pool::revert(io_buf *buffer)
     buffer->length = 0;
     buffer->head = 0;
 
-    pthread_mutex_lock(&_mutex);
+    _mutex.lock();
     //找到对应的hash组 buf首节点地址
     assert(_pool.find(index) != _pool.end());
 
@@ -238,5 +238,5 @@ void buf_pool::revert(io_buf *buffer)
     buffer->next = _pool[index];
     _pool[index] = buffer;
 
-    pthread_mutex_unlock(&_mutex);
+    _mutex.unlock();
 }
