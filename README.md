@@ -30,3 +30,12 @@
     5. 然后`epoll_wait`得到`EPOLLOUT`事件触发，回调`server_wt_callback`，回显消息，之后回到`3.`不断循环往复
         - 这里要注意一下EPOLLOUT事件的触发条件：套接字的发送缓冲区是空的，并且可以立即写入数据，`epoll_ctl`这个时候将套接字添加进入`epoll实例`时候，`EPOLLOUT`时间会立即触发
 - Client: 无实际客户端，`nc 127.0.0.1 7777`，支持写入消息，然后回显消息
+
+### Lars Reactor v0.4
+![Lars Reactor v0.4](img/lars_reactor_0.4.png)
+- 代码：[Lars_reactor_0.4](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.4)
+- Server: 单线程Accept + 引入io_buf(buf_pool) + server侧I/O复用
+    - tcp_conn链接设置:禁止做读写缓存，降低小包延迟
+        - `setsockopt(_connfd, IPPROTO_TCP, TCP_NODELAY, &op, sizeof(op));`
+    - Message消息封装：TLV格式解决粘包
+- Client: 无法使用`nc 127.0.0.1 7777`做测试了，因为只能接受TLV格式的报文，需要自己实现客户端
