@@ -13,6 +13,13 @@
 #include "tcp_server.h"
 #include "reactor_buf.h"
 #include "tcp_conn.h"
+#include "message.h"
+
+
+// ---- 消息分发路由 ----
+msg_router tcp_server::router;
+
+
 
 // ==== 链接资源管理   ====
 //全部已经在线的连接信息
@@ -27,31 +34,30 @@ int tcp_server::_curr_conns = 0;
 //保护_curr_conns刻度修改的锁
 std::mutex tcp_server::_conns_mutex;
 
-
 //新增一个新建的连接
 void tcp_server::increase_conn(int connfd, tcp_conn *conn)
 {
-    _conns_mutex.lock();
+    _conns_mutex.lock();    
     conns[connfd] = conn;
     _curr_conns++;
-    _conns_mutex.unlock();
+    _conns_mutex.unlock();   
 }
 
 //减少一个断开的连接
 void tcp_server::decrease_conn(int connfd)
 {
-    _conns_mutex.lock();
+    _conns_mutex.lock();    
     conns[connfd] = NULL;
     _curr_conns--;
-    _conns_mutex.unlock();
+    _conns_mutex.unlock();   
 }
 
 //得到当前链接的刻度
 void tcp_server::get_conn_num(int *curr_conn)
 {
-    _conns_mutex.lock();
+    _conns_mutex.lock();   
     *curr_conn = _curr_conns;
-    _conns_mutex.unlock();
+    _conns_mutex.unlock();   
 }
 
 
