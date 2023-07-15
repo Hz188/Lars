@@ -5,10 +5,10 @@
 buf_pool * buf_pool::_instance = NULL;
 
 //用于保证创建单例的init方法只执行一次的锁
-std::once_flag buf_pool::_once;
+pthread_once_t buf_pool::_once = PTHREAD_ONCE_INIT;
 
 //用户保护内存池链表修改的互斥锁
-std::mutex buf_pool::_mutex;
+pthread_mutex_t buf_pool::_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
 //构造函数 主要是预先开辟一定量的空间
@@ -52,8 +52,8 @@ buf_pool::buf_pool():_total_mem(0){
         exit(1);
     }
 
-    prev = _pool[m16K];
-    //16K的io_buf 预先开辟1000个，约16MB供开发者使用
+    prev = _pool[m4K];
+    //4K的io_buf 预先开辟1000个，约16MB供开发者使用
     for (int i = 1; i < 1000; i++) {
         prev->next = new io_buf(m16K);
         if(prev->next == nullptr){
@@ -71,8 +71,8 @@ buf_pool::buf_pool():_total_mem(0){
         exit(1);
     }
 
-    prev = _pool[m64K];
-    //64K的io_buf 预先开辟500个，约16MB供开发者使用
+    prev = _pool[m16K];
+    //4K的io_buf 预先开辟1000个，约16MB供开发者使用
     for (int i = 1; i < 500; i++) {
         prev->next = new io_buf(m64K);
         if(prev->next == nullptr){
@@ -194,9 +194,9 @@ io_buf *buf_pool::alloc_buf(int N){
     }
 
     //2 如果该组已经没有，需要额外申请，那么需要加锁保护
-    _mutex.lock();
+    pthread_mutex_lock(&_mutex);
     if(!_pool[index]){
-        if(_total_mem + index / 1024 >= EXTRA_MEM_LIMIT){
+        if(_total_mem + index / 1042 >= EXTRA_MEM_LIMIT){
             // 当前开辟的空间已经超过最大限制
             fprintf(stderr, "already use too many memory!\n");
             exit(1);
@@ -207,36 +207,34 @@ io_buf *buf_pool::alloc_buf(int N){
             exit(1);
         }
         _total_mem += index/1024;
-        _mutex.unlock();
-        return new_buf;
+
     }
 
     //3 从pool中摘除该内存块
     io_buf *target = _pool[index];
     _pool[index] = target->next;
-    _mutex.unlock(); 
-    target->next = NULL;
-    
+    pthread_mutex_unlock(&_mutex);
     return target;
 }
 
 
 //重置一个io_buf,将一个buf 上层不再使用，或者使用完成之后，需要将该buf放回pool中
-void buf_pool::revert(io_buf *buffer)
-{
-    //每个buf的容量都是固定的 在hash的key中取值
+void buf_pool::revert(io_buf *buffer){
+
+    //
     int index = buffer->capacity;
-    //重置io_buf中的内置位置指针
+    //
     buffer->length = 0;
     buffer->head = 0;
 
-    _mutex.lock();
-    //找到对应的hash组 buf首节点地址
+    pthread_mutex_lock(&_mutex);
+    //
     assert(_pool.find(index) != _pool.end());
 
-    //将buffer插回链表头部
+    //
     buffer->next = _pool[index];
     _pool[index] = buffer;
 
-    _mutex.unlock();
+    pthread_mutex_unlock(&_mutex);
+    
 }

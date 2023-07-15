@@ -43,5 +43,18 @@
 ### Lars Reactor v0.4_impl_client
 ![Lars Reactorv0.4_iml_client](img/lars_reactor_0.4_cli.png)
 - 代码：[Lars_reactor_0.4_impl_cli](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.4_impl_cli)
-- Server: 单线程Accept + 引入io_buf(buf_pool) + I/O复用event_loop + tcp_conn封装
+- Server: 单线程Accept + io_buf(buf_pool) + I/O复用event_loop + tcp_conn封装
+- Client: Connect + io_buf(buf_pool) + I/O复用event_loop
+
+### Lars Reactor v0.5
+> 这里通信架构同上，没有变化
+- 代码：[Lars_reactor_0.4_impl_cli](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.4_impl_cli)
+- Server: 单线程Accept + 缓冲池 + I/O复用event_loop事件机制 + tcp_conn封装 + 链接管理
+    - 链接管理：增加连接、减少连接、获得当前连接数
+        - 维护`tcp_conn*`数组，存储所有在线连接信息
+        - 配置文件限制最大连接数    
+    - tcp_server在do_accept的时候，会根据最大连接数设置，约束链接数量
+        - 链接数量超过则返回信息，不建立链接
+        - 若建立链接，维护相关信息（增加连接数）
+        - tcp_conn销毁时，维护相关信息（减少连接数）
 - Client: Connect + io_buf(buf_pool) + I/O复用event_loop

@@ -1,8 +1,5 @@
 #include "event_loop.h"
 #include <assert.h>
-#include <cstddef>
-#include <cstdio>
-#include <cstdlib>
 
 // 构造，初始化epoll堆
 event_loop::event_loop() {
@@ -114,7 +111,7 @@ void event_loop::del_io_event(int fd) {
     listen_fds.erase(fd);
 
     // 将fd从epoll堆删除
-    epoll_ctl(_epfd, EPOLL_CTL_DEL, fd, nullptr);
+    epoll_ctl(_epfd, EPOLL_CTL_DEL, fd, NULL);
 }
 
 // 删除一个io事件的EPOLLIN/EPOLLOUT
