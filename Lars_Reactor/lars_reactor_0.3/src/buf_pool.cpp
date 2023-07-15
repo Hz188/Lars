@@ -53,7 +53,7 @@ buf_pool::buf_pool():_total_mem(0){
     }
 
     prev = _pool[m16K];
-    //4K的io_buf 预先开辟1000个，约16MB供开发者使用
+    //16K的io_buf 预先开辟1000个，约16MB供开发者使用
     for (int i = 1; i < 1000; i++) {
         prev->next = new io_buf(m16K);
         if(prev->next == nullptr){
@@ -72,7 +72,7 @@ buf_pool::buf_pool():_total_mem(0){
     }
 
     prev = _pool[m64K];
-    //4K的io_buf 预先开辟1000个，约16MB供开发者使用
+    //64K的io_buf 预先开辟500个，约16MB供开发者使用
     for (int i = 1; i < 500; i++) {
         prev->next = new io_buf(m64K);
         if(prev->next == nullptr){

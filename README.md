@@ -48,7 +48,7 @@
 
 ### Lars Reactor v0.5
 > 这里通信架构同上，没有变化
-- 代码：[Lars_reactor_0.4_impl_cli](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.4_impl_cli)
+- 代码：[Lars_reactor_0.5](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.5)
 - Server: 单线程Accept + 缓冲池 + I/O复用event_loop事件机制 + tcp_conn封装 + 链接管理
     - 链接管理：增加连接、减少连接、获得当前连接数
         - 维护`tcp_conn*`数组，存储所有在线连接信息
@@ -57,4 +57,15 @@
         - 链接数量超过则返回信息，不建立链接
         - 若建立链接，维护相关信息（增加连接数）
         - tcp_conn销毁时，维护相关信息（减少连接数）
+- Client: Connect + io_buf(buf_pool) + I/O复用event_loop
+
+
+### Lars Reactor v0.6
+> 这里通信架构同上，没有变化
+
+![Lars Reactorv0.4_iml_client](img/lars_reactor_0.6.png)
+- 代码：[Lars_reactor_0.4_impl_cli](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.4_impl_cli)
+- Server: 单线程Accept + 缓冲池 + I/O复用event_loop事件机制 + tcp_conn封装 + 链接管理 + 消息业务路由分发
+    - 在解决粘包问题时候，我们通过TLV结构封装了Message，其中有一个msgid字段
+    - 在服务器接收到客户端消息的时候，会根据msdid进行路由，将消息分发到对应业务回调函数
 - Client: Connect + io_buf(buf_pool) + I/O复用event_loop
