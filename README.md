@@ -44,4 +44,4 @@
 ![Lars Reactorv0.4_iml_client](img/lars_reactor_0.4_cli.png)
 - 代码：[Lars_reactor_0.4_impl_cli](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.4_impl_cli)
 - Server: 单线程Accept + 引入io_buf(buf_pool) + I/O复用event_loop + tcp_conn封装
-- Client: 单线程Connect + io_buf(buf_pool) + I/O复用event_loop
+- Client: Connect + io_buf(buf_pool) + I/O复用event_loop
