@@ -69,3 +69,13 @@
     - 在解决粘包问题时候，我们通过TLV结构封装了Message，其中有一个msgid字段
     - 在服务器接收到客户端消息的时候，会根据msgid进行路由，将消息分发到对应业务回调函数
 - Client: Connect + io_buf(buf_pool) + I/O复用event_loop
+
+### Lars Reactor v0.7
+> 这里通信架构同上，没有变化
+
+![Lars Reactorv0.7](img/lars_reactor_0.7.png)
+- 代码：[Lars_reactor_0.7](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.7)
+- Server: 单线程Accept + 缓冲池 + I/O复用event_loop事件机制 + tcp_conn封装 + 链接管理 + 消息业务路由分发 + Hook机制
+    - 所谓Hook函数：就是服务端创建链接和销毁链接的时候，即创建前和销毁后，执行对应的回调函数
+    - 客户端也同理，在connect()成功的时候，会执行回调，在clean_conn()时会执行回调
+- Client: Connect + io_buf(buf_pool) + I/O复用event_loop
