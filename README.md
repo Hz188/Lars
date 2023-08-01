@@ -84,7 +84,7 @@
 ### Lars Reactor v0.8
 
 ![Lars Reactorv0.8](img/lars_reactor_0.8.png)
-- 代码：[Lars_reactor_0.7](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.8)
+- 代码：[Lars_reactor_0.8](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.8)
 - Server: 单线程Accept + 缓冲池 + I/O复用event_loop事件机制 + tcp_conn封装 + 链接管理 + 消息业务路由分发 + Hook机制 + 线程池 + 消息任务队列
     - Server端实现了线程池
     - 线程池中每个线程
