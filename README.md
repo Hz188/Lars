@@ -77,5 +77,18 @@
 - 代码：[Lars_reactor_0.7](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.7)
 - Server: 单线程Accept + 缓冲池 + I/O复用event_loop事件机制 + tcp_conn封装 + 链接管理 + 消息业务路由分发 + Hook机制
     - 所谓Hook函数：就是服务端创建链接和销毁链接的时候，即创建前和销毁后，执行对应的回调函数
-    - 客户端也同理，在connect()成功的时候，会执行回调，在clean_conn()时会执行回调
+- Client: Connect + io_buf(buf_pool) + I/O复用event_loop
+    - 客户端也同理，在connect()成功的时候，会执行创建前回调，在clean_conn()时会执行销毁的回调
+
+
+### Lars Reactor v0.8
+
+![Lars Reactorv0.8](img/lars_reactor_0.8.png)
+- 代码：[Lars_reactor_0.7](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.8)
+- Server: 单线程Accept + 缓冲池 + I/O复用event_loop事件机制 + tcp_conn封装 + 链接管理 + 消息业务路由分发 + Hook机制 + 线程池 + 消息任务队列
+    - Server端实现了线程池
+    - 线程池中每个线程
+        - 对应了一个消息任务队列thread_queue
+        - 同时对应一个event_loop事件管理机制
+        - 这个loop管理这个线程的所有连接套接字`connfd`的I/O操作 
 - Client: Connect + io_buf(buf_pool) + I/O复用event_loop
