@@ -92,3 +92,15 @@
         - 同时对应一个event_loop事件管理机制
         - 这个loop管理这个线程的所有连接套接字`connfd`的I/O操作 
 - Client: Connect + io_buf(buf_pool) + I/O复用event_loop
+
+### Lars Reactor v0.9
+
+![Lars Reactorv0.9](img/lars_reactor_0.9.png)
+- 代码：[Lars_reactor_0.9](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.9)
+- 实现了Server侧读取配置文件：配置类是单例模式
+```cpp
+    //加载配置文件
+    config_file::setPath("./serv.conf");
+    std::string ip = config_file::instance()->GetString("reactor", "ip", "0.0.0.0");
+    short port = config_file::instance()->GetNumber("reactor", "port", 8888);
+```
