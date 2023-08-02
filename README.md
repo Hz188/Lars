@@ -104,3 +104,8 @@
     std::string ip = config_file::instance()->GetString("reactor", "ip", "0.0.0.0");
     short port = config_file::instance()->GetNumber("reactor", "port", 8888);
 ```
+
+### Lars Reactor v0.10
+
+- 代码：[Lars_reactor_0.10](https://github.com/Hz188/Lars/tree/master/Lars_Reactor/lars_reactor_0.10)
+- 主要是支持了UDP通信方式，但没有线程池、只有单线程处理方式
